@@ -36,6 +36,7 @@ const userController = {
       username: userCreated.username,
       email: userCreated.email,
       id: userCreated._id,
+      role: userCreated.role,
     });
   }),
 
@@ -56,14 +57,16 @@ const userController = {
       throw new Error("Invalid Login credential...");
     }
 
+    const payload = {
+      user: {
+        id: user.id,
+        role: user.role,
+      },
+    };
     //TOKEN JWT enerate
-    const token = jwt.sign(
-      { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      {
-        expiresIn: "30d",
-      }
-    );
+    const token = jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: "30d",
+    });
 
     //send the response
     res.status(200).json({
